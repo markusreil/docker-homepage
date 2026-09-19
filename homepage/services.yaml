@@ -1,0 +1,4 @@
+---
+# Intentionally empty: stops homepage from seeding its demo services.
+# Real services are auto-discovered from homepage.* docker labels on
+# containers that expose a UI.

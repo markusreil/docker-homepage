@@ -1,0 +1,29 @@
+name: homepage
+
+services:
+  homepage:
+    # local build: upstream homepage image with the tracked config baked in
+    # (homepage/docker.yaml, see homepage/Dockerfile)
+    image: homepage:latest
+    build: ./homepage
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ:-UTC}
+      - HOMEPAGE_ALLOWED_HOSTS=localhost,homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
+      # nginx-proxy: the vhost is the service name + BASE_DOMAIN
+      - VIRTUAL_HOST=homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
+      - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL:?LETSENCRYPT_EMAIL must be set in .env}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    expose:
+      - "3000"
+    networks:
+      - default
+      - nginx-proxy
+
+networks:
+  nginx-proxy:
+    external: true
+    name: ${NGINX_PROXY_NETWORK:?NGINX_PROXY_NETWORK must be set in .env}

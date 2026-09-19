@@ -1,0 +1,8 @@
+---
+# Docker integration ("discover all docker UIs"):
+# Gives homepage access to the host docker socket so it sees every container
+# on this host. Containers exposing a UI can be auto-discovered via
+# homepage.* labels (homepage.name, homepage.href, homepage.group, ...),
+# see https://gethomepage.dev/configs/docker
+docker:
+  socket: /var/run/docker.sock
