@@ -49,6 +49,15 @@ Stateless baked-config 3rd-party image: no volumes holding state, no file
 ownership to fix, so no entrypoint or PUID/PGID handling is needed. The
 container runs as the upstream default user.
 
+## Why no `homepage.*` labels
+
+This service *is* the Homepage dashboard (COMPOSE-SPEC rule 11 N/A):
+`homepage.*` labels are how downstream services opt in to discovery via
+`docker.yaml`, so self-labelling would be self-referential. No `labels:`
+in `docker-compose.yml` by intent; tag other containers (e.g.
+`homepage.group`, `homepage.name`, `homepage.href`) to have them appear
+on this dashboard.
+
 ## Security notes
 
 - `/var/run/docker.sock` is mounted read-only (`:ro`) for container
