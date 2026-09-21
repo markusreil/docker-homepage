@@ -31,7 +31,7 @@ BASE_IMAGE` must all match — bump them together.
 
 ## Environment
 
-Set via `.env` at the repo root (see `../.env.example`):
+Set via `.env` at the repo root (see `../env.example`):
 
 | Var | Required | Purpose |
 | --- | --- | --- |

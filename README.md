@@ -4,7 +4,7 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
 
 * discovers all docker UIs on the host via the docker socket
 * vhost is the service name + `BASE_DOMAIN` (e.g. `homepage.example.com`)
-* all env vars live in `.env` (local, gitignored — copy from `.env.example`)
+* all env vars live in `.env` (local, gitignored — copy from `env.example`)
 * compose fails fast when a required variable is unset
 
 ## Layout
@@ -14,8 +14,8 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
 | `docker-compose.yml` | Service definition, nginx-proxy wiring |
 | `homepage/Dockerfile` | Builds the local image from `ghcr.io/gethomepage/homepage:v2.4.0` |
 | `homepage/docker/*.yaml` | Homepage config baked into the image at build time |
-| `.env.example` | Tracked source of truth for required and optional variables |
-| `.env` | Local, gitignored copy of `.env.example` with real values |
+| `env.example` | Tracked source of truth for required and optional variables |
+| `.env` | Local, gitignored copy of `env.example` with real values |
 
 ## Prerequisites
 
@@ -24,10 +24,10 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
 
 ## Setup
 
-1. Copy `.env.example` to `.env` and edit `.env`:
+1. Copy `env.example` to `.env` and edit `.env`:
 
    ```sh
-   cp .env.example .env
+   cp env.example .env
    ```
 
    * `NGINX_PROXY_NETWORK` — name of the shared nginx-proxy network
