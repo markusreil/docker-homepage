@@ -37,7 +37,6 @@ Set via `.env` at the repo root (see `../.env.example`):
 | --- | --- | --- |
 | `BASE_DOMAIN` | yes | Derives `VIRTUAL_HOST` / `LETSENCRYPT_HOST` (`homepage.<BASE_DOMAIN>`) and `HOMEPAGE_ALLOWED_HOSTS` |
 | `NGINX_PROXY_NETWORK` | yes | Name of the existing external nginx-proxy network |
-| `LETSENCRYPT_EMAIL` | yes | Contact email for Let's Encrypt certificates |
 | `HOMEPAGE_VERSION` | yes | Pinned image version; must match Dockerfile `FROM`/`BASE_IMAGE` — bump together |
 | `TZ` | no (default `UTC`) | Container timezone |
 

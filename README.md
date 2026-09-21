@@ -31,9 +31,8 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
    ```
 
    * `NGINX_PROXY_NETWORK` — name of the shared nginx-proxy network
-   * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
-   * `LETSENCRYPT_EMAIL` — email for Let's Encrypt certificates (set `VIRTUAL_HOST` to `homepage.localhost` style if you do not want TLS)
-   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.4.0`; must match Dockerfile `FROM`)
+    * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
+    * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.4.0`; must match Dockerfile `FROM`)
    * `TZ` — optional, default `UTC`
 
 2. Sanity-check, build, and start it:
