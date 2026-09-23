@@ -7,8 +7,8 @@ Local build on top of the upstream image with tracked config baked in.
 - `FROM ghcr.io/gethomepage/homepage:v2.4.0` — upstream image **is** the
   service (3rd-party dashboard); using it directly is allowed case-by-case.
 - `COPY docker/*.yaml /app/config/` bakes the tracked config
-  (`bookmarks.yaml`, `docker.yaml`, `services.yaml`, `settings.yaml`) into
-  the image at build time.
+  (`bookmarks.yaml`, `docker.yaml`, `services.yaml`, `settings.yaml`,
+  `widgets.yaml`) into the image at build time.
 
 Rebuild after any config change:
 
@@ -35,13 +35,24 @@ Set via `.env` at the repo root (see `../env.example`):
 
 | Var | Required | Purpose |
 | --- | --- | --- |
-| `BASE_DOMAIN` | yes | Derives `VIRTUAL_HOST` / `LETSENCRYPT_HOST` (`homepage.<BASE_DOMAIN>`) and `HOMEPAGE_ALLOWED_HOSTS` |
-| `NGINX_PROXY_NETWORK` | yes | Name of the existing external nginx-proxy network |
+| `BASE_DOMAIN` | yes | Derives the `x-hosts` anchor (`homepage.<BASE_DOMAIN>`) used for `VIRTUAL_HOST`, `ACME_HOST`, and `HOMEPAGE_ALLOWED_HOSTS` |
+| `NGINX_PROXY_NETWORK` | no (default `web-proxy`) | Name of the existing external nginx-proxy network |
 | `HOMEPAGE_VERSION` | yes | Pinned image version; must match Dockerfile `FROM`/`BASE_IMAGE` — bump together |
 | `TZ` | no (default `UTC`) | Container timezone |
+| `HOMEPAGE_GEN_SELF_SIGNED_CERT` | no (default `false`) | Self-signed TLS opt-in, honoured only by a LAN/self-signed proxy variant; leave `false` for an internet-facing cluster |
 
 Derived (set in `docker-compose.yml`, not in `.env`): `VIRTUAL_HOST`,
-`VIRTUAL_PORT=3000`, `LETSENCRYPT_HOST`, `HOMEPAGE_ALLOWED_HOSTS`.
+`VIRTUAL_PORT=3000`, `ACME_HOST`, `GEN_SELF_SIGNED_CERT`,
+`HOMEPAGE_ALLOWED_HOSTS`.
+
+## Proxy contract
+
+The service declares its complete, variant-agnostic proxy contract:
+`VIRTUAL_HOST` and `ACME_HOST` (both the `x-hosts` anchor) plus
+`GEN_SELF_SIGNED_CERT` wired from `HOMEPAGE_GEN_SELF_SIGNED_CERT` (default
+`false`). An internet-facing cluster honours `ACME_HOST`; a LAN/self-signed
+cluster honours `GEN_SELF_SIGNED_CERT`; each ignores the other. `VIRTUAL_PORT`
+selects the exposed port `3000`. No `ports:` are published.
 
 ## Why no entrypoint / PUID-PGID seeder
 

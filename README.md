@@ -16,6 +16,8 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
 | `homepage/docker/*.yaml` | Homepage config baked into the image at build time |
 | `env.example` | Tracked source of truth for required and optional variables |
 | `.env` | Local, gitignored copy of `env.example` with real values |
+| `CHANGELOG.md` | Notable changes, kept per Keep a Changelog |
+| `AGENTS.md` | Ongoing rules for agents working in the repo |
 
 ## Prerequisites
 
@@ -30,10 +32,13 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
    cp env.example .env
    ```
 
-   * `NGINX_PROXY_NETWORK` — name of the shared nginx-proxy network
-    * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
-    * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.4.0`; must match Dockerfile `FROM`)
+   * `NGINX_PROXY_NETWORK` — optional, default `web-proxy`; name of the shared
+     nginx-proxy network
+   * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
+   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.4.0`; must match Dockerfile `FROM`)
    * `TZ` — optional, default `UTC`
+   * `HOMEPAGE_GEN_SELF_SIGNED_CERT` — optional, default `false`; set `true` only
+     for a LAN/self-signed cluster or local testing
 
 2. Sanity-check, build, and start it:
 

@@ -1,2 +1,27 @@
 ---
-showStats: true
+title: "{{HOMEPAGE_VAR_BASE_DOMAIN}} homepage"
+description: A description of my awesome homepage
+# Compact layout: dot status, no per-service stats, full-width dense grid.
+# Groups in the layout block are auto-discovered via homepage.* docker labels.
+showStats: false
+statusStyle: "dot"
+hideVersion: true
+fullWidth: true
+maxGroupColumns: 8
+useEqualHeights: true
+layout:
+  Monitoring:
+    style: row
+    columns: 4
+  Infrastructure:
+    style: row
+    columns: 3
+  Media:
+    style: row
+    columns: 6
+  Boot:
+    style: row
+    columns: 4
+  Repositories:
+    style: row
+    columns: 4

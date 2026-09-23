@@ -1,14 +1,12 @@
 name: homepage
 
 x-hosts:
-  virtual_host: &virtual_host VIRTUAL_HOST=homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
-  letsencrypt_host: &letsencrypt_host LETSENCRYPT_HOST=homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
-  allowed_hosts: &allowed_hosts HOMEPAGE_ALLOWED_HOSTS=localhost,homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
+  homepage: &host-homepage homepage.${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
 
 services:
   homepage:
     # local build: upstream homepage image with the tracked config baked in
-    # (homepage/docker/docker.yaml, see homepage/Dockerfile)
+    # (homepage/docker/*.yaml, see homepage/Dockerfile)
     image: homepage:${HOMEPAGE_VERSION:?HOMEPAGE_VERSION must be set in .env}
     build:
       context: ./homepage
@@ -16,21 +14,26 @@ services:
         BUILD_DATE: ${BUILD_DATE:-unknown}
     restart: unless-stopped
     environment:
-      - TZ=${TZ:-UTC}
-      - *allowed_hosts
-      # nginx-proxy: the vhost is the service name + BASE_DOMAIN
-      - *virtual_host
-      - VIRTUAL_PORT=3000
-      - *letsencrypt_host
+      TZ: ${TZ:-UTC}
+      # homepage only serves this vhost (ingress is via nginx-proxy; no ports)
+      HOMEPAGE_ALLOWED_HOSTS: *host-homepage
+      # complete downstream proxy contract: both TLS opt-ins are declared and
+      # the proxy variant decides which one applies.
+      VIRTUAL_HOST: *host-homepage
+      VIRTUAL_PORT: "3000"
+      ACME_HOST: *host-homepage
+      GEN_SELF_SIGNED_CERT: ${HOMEPAGE_GEN_SELF_SIGNED_CERT:-false}
+      # homepage dashboard title template var (see settings.yaml)
+      HOMEPAGE_VAR_BASE_DOMAIN: ${BASE_DOMAIN:?BASE_DOMAIN must be set in .env}
     volumes:
+      # docker socket (special-case bind mount) for container discovery
       - /var/run/docker.sock:/var/run/docker.sock:ro
     expose:
       - "3000"
     networks:
-      - default
       - nginx-proxy
 
 networks:
   nginx-proxy:
     external: true
-    name: ${NGINX_PROXY_NETWORK:?NGINX_PROXY_NETWORK must be set in .env}
+    name: ${NGINX_PROXY_NETWORK:-web-proxy}
