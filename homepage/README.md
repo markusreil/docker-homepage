@@ -4,7 +4,7 @@ Local build on top of the upstream image with tracked config baked in.
 
 ## Build
 
-- `FROM ghcr.io/gethomepage/homepage:v2.4.0` — upstream image **is** the
+- `FROM ghcr.io/gethomepage/homepage:v2.7.0` — upstream image **is** the
   service (3rd-party dashboard); using it directly is allowed case-by-case.
 - `COPY docker/*.yaml /app/config/` bakes the tracked config
   (`bookmarks.yaml`, `docker.yaml`, `services.yaml`, `settings.yaml`,

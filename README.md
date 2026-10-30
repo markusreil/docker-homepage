@@ -12,7 +12,7 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
 | Path | Purpose |
 | --- | --- |
 | `docker-compose.yml` | Service definition, nginx-proxy wiring |
-| `homepage/Dockerfile` | Builds the local image from `ghcr.io/gethomepage/homepage:v2.4.0` |
+| `homepage/Dockerfile` | Builds the local image from `ghcr.io/gethomepage/homepage:v2.7.0` |
 | `homepage/docker/*.yaml` | Homepage config baked into the image at build time |
 | `env.example` | Tracked source of truth for required and optional variables |
 | `.env` | Local, gitignored copy of `env.example` with real values |
@@ -35,7 +35,7 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
    * `NGINX_PROXY_NETWORK` — optional, default `web-proxy`; name of the shared
      nginx-proxy network
    * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
-   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.4.0`; must match Dockerfile `FROM`)
+   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.7.0`; must match Dockerfile `FROM`)
    * `TZ` — optional, default `UTC`
    * `HOMEPAGE_GEN_SELF_SIGNED_CERT` — optional, default `false`; set `true` only
      for a LAN/self-signed cluster or local testing
@@ -70,5 +70,23 @@ For any `icon` field, three icon sets are available via their prefixes:
 | `mdi-` (e.g. `mdi-github`) | [Material Design Icons](https://pictogrammers.com/library/mdi/) | https://pictogrammers.com/library/mdi/ |
 | `si-` (e.g. `si-github`) | [Simple Icons](https://simpleicons.org/) | https://simpleicons.org/ |
 | `sh-` (e.g. `sh-adguard-home`) | [selfh.st/icons](https://selfh.st/icons/) | https://selfh.st/icons/ |
+
+## Security hardening (`homepage/Dockerfile`)
+
+On top of the upstream image the build applies three hardening steps.
+Revisit all of them on the next version bump - a newer upstream may make
+them redundant:
+
+* `apk upgrade openssl libssl3 libcrypto3` - OS-level CVEs the upstream
+  image lags on.
+* `npm`/`npx`/`corepack` are removed - the runtime only ever runs
+  `node server.js`, and npm shipped a stale bundled `ip-address@10.5.0`
+  no version bump could fix.
+* `undici` 8.11.2 -> 8.12.3 and `systeminformation` 5.33.13 -> 5.33.19,
+  replaced in place with tarballs from the npm registry (fixes
+  CVE-2026-109869 and CVE-2026-116576, unfixed in upstream `v2.7.0`).
+  The `.pnpm` directory names keep their old version suffix so existing
+  symlinks stay intact; contents and `package.json` are the fixed
+  releases. Drop these lines once upstream ships fixed deps.
 
 `mdi-` and `si-` icons default to SVG; the `sh-` prefix defaults to the PNG version (`sh-XX`, or force a version with `sh-XX.svg`/`.png`/`.webp`). A custom color can be appended to `mdi-`/`si-` icons as a hex suffix, e.g. `mdi-XX-#f0d453` - see https://gethomepage.dev/configs/services.

@@ -35,3 +35,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 ### Security
+
+- Bumped `ghcr.io/gethomepage/homepage` from `v2.4.0` to `v2.7.0` to pick
+  up fixed JS deps (`tar`, `brace-expansion`, `ip-address`).
+- Added an `apk upgrade openssl libssl3 libcrypto3` layer in
+  `homepage/Dockerfile` for OS CVEs left over in the upstream image.
+- Removed `npm`/`npx`/`corepack` from the runtime image (it only ever runs
+  `node server.js`); this drops npm's bundled `ip-address@10.5.0`, which
+  no version bump could fix.
+- Patched `undici` 8.11.2 to 8.12.3 and `systeminformation` 5.33.13 to
+  5.33.19 in place from npm-registry tarballs (fixes CVE-2026-109869 and
+  CVE-2026-116576, not yet fixed in upstream `v2.7.0`).
