@@ -1,6 +1,12 @@
-FROM ghcr.io/gethomepage/homepage:v2.7.0
-ENV BASE_IMAGE=ghcr.io/gethomepage/homepage:v2.7.0
+# No default: the version comes exclusively from compose (.env), which
+# fails fast if HOMEPAGE_VERSION is unset. Plain `docker build` needs
+# --build-arg HOMEPAGE_VERSION=...
+ARG HOMEPAGE_VERSION
+FROM ghcr.io/gethomepage/homepage:${HOMEPAGE_VERSION}
+# Re-declared: an ARG before FROM is out of scope after it.
+ARG HOMEPAGE_VERSION
 ARG BUILD_DATE=unknown
+ENV BASE_IMAGE=ghcr.io/gethomepage/homepage:${HOMEPAGE_VERSION}
 ENV BUILD_DATE=${BUILD_DATE}
 # Patch OS-level CVEs left over in the upstream image (e.g. openssl
 # libssl3/libcrypto3). JS deps (tar, brace-expansion, ip-address) ride with

@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `HOMEPAGE_VERSION` is now a build arg passed from `.env` via compose, so
+  the version is bumped in `.env` only; the Dockerfile `ARG` has no
+  default, so plain `docker build` needs
+  `--build-arg HOMEPAGE_VERSION=...`.
+
 - Proxy contract migrated from the deprecated `LETSENCRYPT_HOST` to `ACME_HOST`
   (current upstream `acme-companion` naming).
 - Hostname is now defined once in an `x-hosts` anchor and referenced for

@@ -35,7 +35,7 @@ A docker compose deployment of the [homepage](https://gethomepage.dev) dashboard
    * `NGINX_PROXY_NETWORK` — optional, default `web-proxy`; name of the shared
      nginx-proxy network
    * `BASE_DOMAIN` — the root domain this host serves (e.g. `example.com`)
-   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.7.0`; must match Dockerfile `FROM`)
+   * `HOMEPAGE_VERSION` — pinned image version (e.g. `v2.7.0`; passed as a build arg, so this is the only place to bump it)
    * `TZ` — optional, default `UTC`
    * `HOMEPAGE_GEN_SELF_SIGNED_CERT` — optional, default `false`; set `true` only
      for a LAN/self-signed cluster or local testing

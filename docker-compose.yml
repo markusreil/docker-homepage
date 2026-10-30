@@ -12,6 +12,8 @@ services:
       context: ./homepage
       args:
         BUILD_DATE: ${BUILD_DATE:-unknown}
+        # Single source of truth for the version: .env, not the Dockerfile.
+        HOMEPAGE_VERSION: ${HOMEPAGE_VERSION:?HOMEPAGE_VERSION must be set in .env}
     restart: unless-stopped
     environment:
       TZ: ${TZ:-UTC}
